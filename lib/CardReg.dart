@@ -1,4 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:test_login/Login.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
+import 'api.dart';
 
 class CardReg extends StatefulWidget {
   static String tag = 'card_reg';
@@ -7,6 +13,16 @@ class CardReg extends StatefulWidget {
 }
 
 class _CardRegState extends State<CardReg> {
+
+ var email ;
+ var password ;
+ var confirmPassword ;
+
+ final emailController = new TextEditingController();
+ final passwordController = new TextEditingController();
+ final confirmPasswordController = new TextEditingController();
+
+ bool _isloading = false;
 
  bool _isHidden = true;
 
@@ -46,7 +62,7 @@ class _CardRegState extends State<CardReg> {
             SizedBox(height: 20.0,),
             buildTextField("Password"),
             SizedBox(height: 20.0,),
-            buildTextField2("Confirm Password"),
+            buildTextFieldConfirm("Confirm Password"),
             SizedBox(height: 20.0,),
             // Container(
             //   child: Row(
@@ -73,6 +89,7 @@ class _CardRegState extends State<CardReg> {
 
    Widget buildTextFieldEmail(String hintText){
     return TextField(
+      controller: emailController,
       decoration: InputDecoration(
         labelText: hintText,
         hintStyle: TextStyle(
@@ -91,6 +108,7 @@ class _CardRegState extends State<CardReg> {
 
   Widget buildTextField(String hintText){
     return TextField(
+      controller: passwordController,
       decoration: InputDecoration(
         labelText: hintText,
         hintStyle: TextStyle(
@@ -109,8 +127,9 @@ class _CardRegState extends State<CardReg> {
       obscureText: hintText == "Password" ? _isHidden : false,
     );
   }
-    Widget buildTextField2(String hintText){
+    Widget buildTextFieldConfirm(String hintText){
     return TextField(
+      controller: confirmPasswordController,
       decoration: InputDecoration(
         labelText: hintText,
         hintStyle: TextStyle(
@@ -140,40 +159,79 @@ class _CardRegState extends State<CardReg> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(5),
         ),
+         padding: EdgeInsets.all(12),
+                  color: Colors.lightBlueAccent,
+                  child: Text( _isloading ? 'Creating.....': 'Register', style: TextStyle(color: Colors.white)),
+        onPressed:_isloading ? null : _handleLogin,
         
-        onPressed: () {
-          Navigator.of(context).pushNamed(CardReg.tag);
-        },
-        padding: EdgeInsets.all(12),
-        color: Colors.lightBlueAccent,
-        child: Text('Register', style: TextStyle(color: Colors.white)),
-      ),
-      );
-    // );
-    // return Container(
-    //   height: 56.0,
-    //   width: MediaQuery.of(context).size.width,
-    //   decoration: BoxDecoration(
-    //     borderRadius: BorderRadius.circular(3.0),
-    //     gradient: LinearGradient(
-    //       colors: [
-    //         Color(0xFFFB415B),
-    //         Color(0xFFEE5623)
-    //       ],
-    //       begin: Alignment.centerRight,
-    //       end: Alignment.centerLeft
-    //     ),
-    //   ),
-    //   child: Center(
-    //     child: Text(
-    //       "LOGIN",
-    //       style: TextStyle(
-    //         color: Colors.white,
-    //         fontSize: 18.0,
-    //       ),
-    //     ),
-    //   ),
-    // );
+        // onPressed: () {
+          
+        //   _isloading ? null : _handleLogin();
+        //             // setState(() {
+        //             //   email = emailController.text;
+        //             //   password = passwordController.text;
+        //             //   confirmPassword = confirmPasswordController.text;
+        //             // });
+        //             // Fluttertoast.showToast(msg: email+password+confirmPassword);
+        //           },
+                 
+                ),
+                );
+              // );
+              // return Container(
+              //   height: 56.0,
+              //   width: MediaQuery.of(context).size.width,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(3.0),
+              //     gradient: LinearGradient(
+              //       colors: [
+              //         Color(0xFFFB415B),
+              //         Color(0xFFEE5623)
+              //       ],
+              //       begin: Alignment.centerRight,
+              //       end: Alignment.centerLeft
+              //     ),
+              //   ),
+              //   child: Center(
+              //     child: Text(
+              //       "LOGIN",
+              //       style: TextStyle(
+              //         color: Colors.white,
+              //         fontSize: 18.0,
+              //       ),
+              //     ),
+              //   ),
+              // );
+          
+            }
+          
+            void _handleLogin() async{
+              setState(() {
+                _isloading = true;
+              });
+              var data = {
+                'email' : emailController.text,
+                'password' : passwordController.text,
+                //'confirmPassword' : confirmPasswordController.text,
+              };
 
-  }
+              var res = await CallApi().postData(data,'create');
+              
+              print('body: [${res.body}]');
+              var body = json.decode(res.body);
+
+              if(body['Code']=='1'){
+                print('success');
+                print(data);
+                Navigator.of(context).pushNamed(Login.tag);
+              }else{
+                Fluttertoast.showToast(msg: 'Something Wrong');
+              }
+
+              setState(() {
+                _isloading = false;
+              });
+              print(body);
+            
+            }
 }

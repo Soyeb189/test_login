@@ -7,6 +7,7 @@ import 'LoginPage.dart';
 import 'RegPage.dart';
 import 'CardReg.dart';
 
+
 void main() {
   runApp(MyApp());
 }
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
     RegPage.tag: (context) => RegPage(),
     Login.tag:(context) => Login(),
     CardReg.tag:(context) => CardReg(),
+    //GridView.tag:(context) => GridView(),
   };
 
 
