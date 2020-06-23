@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
   bool _isloading = false;
 
   bool _isHidden = true;
-  var email;
+  var email,name,mobile,presentAddress,parmanentAddress,gander,dateOfBirth,id;
   var password;
 
   final passwordController = new TextEditingController();
@@ -146,9 +146,7 @@ class _LoginState extends State<Login> {
           color: Colors.grey,
           fontSize: 16.0,
         ),
-        // border: OutlineInputBorder(
-        //   borderRadius: BorderRadius.circular(20.0),
-        // ),
+
 
         suffixIcon: hintText == "Password"
             ? IconButton(
@@ -164,8 +162,6 @@ class _LoginState extends State<Login> {
   }
 
   Widget buildButtonContainer() {
-    // return Padding(
-    // padding: EdgeInsets.symmetric(vertical: 16.0),
 
     return Container(
       width: double.infinity,
@@ -182,46 +178,6 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    //Navigator.of(context).pushNamed(CardReg.tag);
-    //       setState(() {
-    //         email = emailController.text;
-    //         password = nameController.text;
-    //       });
-    //       Fluttertoast.showToast(
-    //         msg: "This is Center Short Toast"+email+password,
-    //         toastLength: Toast.LENGTH_SHORT,
-    //         gravity: ToastGravity.CENTER,
-    //         timeInSecForIosWeb: 1,
-    //         backgroundColor: Colors.red,
-    //         textColor: Colors.white,
-    //         fontSize: 16.0
-    // );
-
-    // );
-    // return Container(
-    //   height: 56.0,
-    //   width: MediaQuery.of(context).size.width,
-    //   decoration: BoxDecoration(
-    //     borderRadius: BorderRadius.circular(3.0),
-    //     gradient: LinearGradient(
-    //       colors: [
-    //         Color(0xFFFB415B),
-    //         Color(0xFFEE5623)
-    //       ],
-    //       begin: Alignment.centerRight,
-    //       end: Alignment.centerLeft
-    //     ),
-    //   ),
-    //   child: Center(
-    //     child: Text(
-    //       "LOGIN",
-    //       style: TextStyle(
-    //         color: Colors.white,
-    //         fontSize: 18.0,
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   void _handleLogin() async {
@@ -250,17 +206,32 @@ class _LoginState extends State<Login> {
 
     if (body['email'] != null) {
       print(body['email']);
+      print(body);
+      email = body['email'];
+      name = body['name'];
+      mobile = body['phone'];
+      presentAddress = body['presentAddress'];
+      parmanentAddress = body['parmanentAddress'];
+      gander = body['gender'];
+      dateOfBirth = body['dob'];
+      id = body['id'];
+      print(id);
       print(data);
       Navigator.push(context,
-    MaterialPageRoute(builder: (context) => GridViewDemo()),);
-      // Fluttertoast.showToast(
-      //     msg: "Login Success",
-      //     toastLength: Toast.LENGTH_SHORT,
-      //     gravity: ToastGravity.CENTER,
-      //     timeInSecForIosWeb: 1,
-      //     backgroundColor: Colors.red,
-      //     textColor: Colors.white,
-      //     fontSize: 16.0);
+      MaterialPageRoute(builder: (context) => GridViewDemo(
+        email: email,
+        name: name,
+        presentAddress: presentAddress,
+        parmanentAddress: parmanentAddress,
+        dateOfBirth: dateOfBirth,
+        gander: gander,
+        mobile: mobile,
+        id: id,
+
+      )
+      ),
+      );
+
     } else {
       Fluttertoast.showToast(msg: 'Something Wrong');
     }
@@ -268,6 +239,6 @@ class _LoginState extends State<Login> {
     setState(() {
       _isloading = false;
     });
-    print(body);
+
   }
 }
